@@ -1,5 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="h3">Dashboard</h1>
-<p class="text-muted">Welcome, {{ user.username }}. Your dashboard will appear here (coming on Day 3).</p>
+<h1 class="h3 mb-3">Dashboard</h1>
+
+<h2 class="h5">Applications by status</h2>
+<div class="row mb-4">
+  {% for item in status_counts %}
+  <div class="col-6 col-md">
+    <div class="card text-center mb-2">
+      <div class="card-body">
+        <div class="fs-3">{{ item.count }}</div>
+        <div class="text-muted">{{ item.label }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="h5">Upcoming deadlines</h2>
+{% if upcoming %}
+<ul class="list-group mb-4">
+  {% for app in upcoming %}
+  <li class="list-group-item">
+    <strong>{{ app.deadline_date|date:"d M Y" }}</strong>
+    {% if app.deadline_label %}({{ app.deadline_label }}){% endif %}
+    : {{ app.company }}, {{ app.role }}
+    <a class="ms-2" href="{% url 'edit_application' app.pk %}">Edit</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted mb-4">No upcoming deadlines.</p>
+{% endif %}
+
+<h2 class="h5">No update for more than 7 days</h2>
+{% if stale %}
+<ul class="list-group">
+  {% for app in stale %}
+  <li class="list-group-item">
+    {{ app.company }}, {{ app.role }}
+    <span class="text-muted">(last updated {{ app.last_updated|date:"d M Y" }})</span>
+    <a class="ms-2" href="{% url 'edit_application' app.pk %}">Edit</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">Nothing to follow up on. Nice work.</p>
+{% endif %}
 {% endblock %}
