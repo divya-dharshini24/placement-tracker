@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>My applications</h1>
+  <a class="btn btn-primary" href="{% url 'add_application' %}">Add application</a>
+</div>
+
+{% if applications %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Company</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Deadline</th>
+      <th>Updated</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for app in applications %}
+    <tr>
+      <td>{{ app.company }}</td>
+      <td>{{ app.role }}</td>
+      <td>{{ app.get_status_display }}</td>
+      <td>{{ app.deadline_date|date:"d M Y"|default:"-" }} {{ app.deadline_label }}</td>
+      <td>{{ app.last_updated|date:"d M Y" }}</td>
+      <td>
+        <a href="{% url 'edit_application' app.pk %}">Edit</a> |
+        <a href="{% url 'delete_application' app.pk %}">Delete</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No applications yet. Add your first one.</p>
+{% endif %}
+{% endblock %}
