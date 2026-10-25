@@ -2,6 +2,10 @@
 
 A web app where students track their job applications: company, role, status, deadlines and notes. Each student has their own account and sees only their own applications.
 
+## Problem
+
+Students applying for campus placements lose track of applications, deadlines and statuses across many companies. This app gives each student one private place to see where every application stands and what needs attention next.
+
 ## Features
 
 - Sign up, log in and log out (Django's built-in authentication)
@@ -43,7 +47,20 @@ To use the admin site, run `python manage.py createsuperuser` and open http://12
 python manage.py test
 ```
 
-The 17 tests cover login protection, privacy between students, the dashboard logic, add, edit, delete, filtering and validation.
+The 17 tests include:
+
+- **Unit tests:** the dashboard logic (counts by status, upcoming deadlines, the 7-day rule) and form validation
+- **Integration tests:** login protection, privacy between students, and add, edit, delete and filter, using Django's test client against the real views and database
+
+## Project documents
+
+- `AGENTS.md`: project overview, commands and rules for coding assistants
+- `_docs/plan.md`: the product specification
+- `_docs/process.md`: how work is organized
+- `_docs/team/`: the PM, engineer and QA role descriptions
+- Tasks and acceptance criteria are tracked in the repository's GitHub Issues
+
+I built this project with an AI assistant guiding me step by step; I ran, tested and committed every change myself.
 
 ## Project structure
 
