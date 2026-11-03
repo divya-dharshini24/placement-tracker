@@ -20,7 +20,8 @@ Students applying for campus placements lose track of applications, deadlines an
 ## Tech stack
 
 - Python 3.9 and Django 4.2
-- SQLite database
+- SQLite database for local development, and PostgreSQL 16 when running with Docker
+- Docker and Docker Compose for running the app and database together
 - Django templates with Bootstrap for the pages
 
 I used Django templates instead of a separate React frontend. This keeps it as one project with one command to run, while the frontend (templates and forms), backend (views) and database (models) are all connected.
@@ -40,6 +41,40 @@ python manage.py runserver
 Open http://127.0.0.1:8000/, click **Sign up**, create an account and add your first application.
 
 To use the admin site, run `python manage.py createsuperuser` and open http://127.0.0.1:8000/admin/.
+
+## Run with Docker
+
+Docker runs the app and a PostgreSQL database together, so you don't need to install Python or PostgreSQL yourself.
+
+**Prerequisite:** Docker Desktop must be installed and running.
+
+```bash
+docker compose up --build
+```
+
+Then open http://127.0.0.1:8001/. The Docker database starts empty, so click **Sign up** and create a new account first. Accounts from the local SQLite database are not copied over.
+
+Your data is kept in a Docker volume, so it survives restarts.
+
+To stop the app, press `Ctrl+C` once, or run:
+
+```bash
+docker compose stop
+```
+
+To run the tests inside the container:
+
+```bash
+docker compose run --rm web python manage.py test
+```
+
+To delete the Docker database and start fresh:
+
+```bash
+docker compose down -v
+```
+
+**Warning:** this permanently deletes all accounts and applications stored in the Docker database.
 
 ## How to run the tests
 
@@ -70,6 +105,9 @@ I built this project with an AI assistant guiding me step by step; I ran, tested
 - `applications/tests.py`: automated tests
 - `applications/templates/`: page templates
 - `jobtracker/`: project settings and URLs
+- `Dockerfile`: builds the image that runs the Django app
+- `docker-compose.yml`: starts the app and PostgreSQL together, with a health check and a data volume
+- `.dockerignore`: files kept out of the Docker image, such as the local venv and SQLite file
 
 ## Future improvements
 
