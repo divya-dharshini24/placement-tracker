@@ -20,7 +20,7 @@ Students applying for campus placements lose track of applications, deadlines an
 ## Tech stack
 
 - Python 3.9 and Django 4.2
-- SQLite database
+- SQLite database by default, Postgres when run with Docker
 - Django templates with Bootstrap for the pages
 
 I used Django templates instead of a separate React frontend. This keeps it as one project with one command to run, while the frontend (templates and forms), backend (views) and database (models) are all connected.
@@ -47,10 +47,45 @@ To use the admin site, run `python manage.py createsuperuser` and open http://12
 python manage.py test
 ```
 
-The 17 tests include:
+The 17 tests cover login protection, privacy between students, the dashboard logic (counts by status, upcoming deadlines, the 7-day rule), add, edit, delete, filtering and validation. They use Django's test client against the real views and database.
 
-- **Unit tests:** the dashboard logic (counts by status, upcoming deadlines, the 7-day rule) and form validation
-- **Integration tests:** login protection, privacy between students, and add, edit, delete and filter, using Django's test client against the real views and database
+## Run with Docker
+
+The app can also run in Docker, with Postgres as the database. One command starts both the app and the database, so there is no need to install Python packages or a database on your computer.
+
+**What you need:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and **running**.
+
+**Start everything:**
+
+```bash
+docker compose up --build
+```
+
+The first run takes a few minutes while Docker builds the image. The database migrations are applied automatically when the app starts.
+
+**Open the app** at http://127.0.0.1:8001/, then click **Sign up**, create an account and add your first application. (The app listens on port 8001 on your computer because port 8000 was blocked on mine. You can change it in `docker-compose.yml`.)
+
+**Run the tests inside the container** (in a second terminal, while or after the app runs):
+
+```bash
+docker compose run --rm web python manage.py test
+```
+
+All 17 tests run against the Postgres database.
+
+**Stop it:**
+
+```bash
+docker compose down
+```
+
+This stops the containers and keeps your data. To stop **and delete the database data**, use:
+
+```bash
+docker compose down -v
+```
+
+**Note:** the database user and password in `docker-compose.yml` are for local development only. Never reuse them for a real deployment.
 
 ## Project documents
 
